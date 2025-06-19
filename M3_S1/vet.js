@@ -7,13 +7,13 @@ let mascotas = [{
   {
     nombre: "Firulais",
     especie: "Perro",
-    edad: 3,
+    edad: 8,
     vacunado: false
   },
   {
     nombre: "Firulais2",
     especie: "Perro",
-    edad: 3,
+    edad:4,
     vacunado: true
   }
 ]
@@ -25,7 +25,11 @@ const mascotasVacunadas = () =>{
     })
 }
 const promedioEdadMascota = () =>{
-    
+    let sumaEdades = 0;
+    mascotas.forEach((mascota) => sumaEdades += mascota.edad)
+    let promedio = sumaEdades / mascotas.length
+    console.log(`Promedio edades de mascotas: ${promedio}`)
 }
 
 mascotasVacunadas()
+promedioEdadMascota()

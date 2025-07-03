@@ -1,4 +1,15 @@
 const BASE_API_URL = "http://localhost:3000/products";
+const existingProducts = async () => {
+    try{
+        const response = await fetch(`${BASE_API_URL}`);
+        const data = await response.json()
+        console.log(data);
+    }
+    catch (error) {
+        console.error("Error fetching products:", error);
+    }
+}
+
 // Create a new product (POST)
 const newProductFunction = async () => {
 
@@ -13,7 +24,7 @@ const newProductFunction = async () => {
   } catch {
     console.log("error");
   }
-  console.log(newProduct)
+//   console.log(newProduct)
 };
 
 
@@ -27,9 +38,9 @@ const updateProductFunction = async () => {
       headers: {'Content-Type': 'application/json' },
       body: JSON.stringify(updateProduct),
       })
-      const data = response.json()
+      const data =  await response.json()
       console.log("Updated product:", data)
-    } catch {
+    } catch (error) {
      
       error => console.error("Error gupdating product", error);
     }
@@ -41,24 +52,11 @@ const deleteProduct = async () => {
         const response = await fetch(`${BASE_API_URL}/${deleteId}`,{
         method:'DELETE'
         })
-        console.log("Producto eliminado correctamente", response)
+        const data = await response.json();
+        console.log("Producto eliminado correctamente", data)
     }
     catch (error){
         console.error('Error al eliminar tarea:', error)
     }
 }
 
-
-
-// const UpdateProduct = { "name": "Laptop", "price": 1400 };
-
-// fetch('http://localhost:3000/products', {
-//     method: 'PUT',
-//     headers: {'Content-Type': 'application/json' },
-//     body: JSON.stringify(UpdateProduct)
-// })
-//     .then(response => response.json())
-//     .then(data => console.log("Updated product:", data))
-//     .catch(error => console.error("Error gupdating product", error));
-
- // console.log(UpdateProduct)

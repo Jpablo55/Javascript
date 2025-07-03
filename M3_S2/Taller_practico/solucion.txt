@@ -1,0 +1,82 @@
+¡Entendido! Vamos a verificar si el producto existe antes de intentar crearlo o actualizarlo. Esto evitará que se haga una solicitud innecesaria y, además, solucionará el problema de la duplicación o la actualización infinita.
+
+Vamos a hacer esto usando un GET para comprobar primero si el producto con id = 4 existe en el servidor, y luego procederemos con el POST (para crear) o PUT (para actualizar) según sea necesario.
+
+🎯 Código ajustado:
+html
+Copiar
+Editar
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Control de productos</title>
+</head>
+<body>
+  <script>
+    // Creamos los objetos con los datos del producto.
+    const newProduct = { "id": 4, "name": "Monitor", "price": 200 };
+    const updateProduct = { "name": "Laptop", "price": 1400 };
+
+    // Primero verificamos si el producto con ID = 4 ya existe.
+    fetch('http://localhost:3000/products/4')
+      .then(response => {
+        if (!response.ok) {
+          // Si la respuesta es 404, significa que el producto no existe
+          // Entonces, creamos el producto
+          return fetch('http://localhost:3000/products', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(newProduct),
+          });
+        }
+        // Si el producto existe, lo actualizamos
+        return fetch('http://localhost:3000/products/4', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(updateProduct),
+        });
+      })
+      .then(response => response.json())
+      .then(data => {
+        // Dependiendo de si creamos o actualizamos el producto, mostramos un mensaje
+        if (data.id) {
+          console.log('Producto creado o actualizado:', data);
+        } else {
+          console.error('Error con la respuesta del servidor');
+        }
+      })
+      .catch(error => {
+        console.error("Error en la operación:", error);
+      });
+  </script>
+</body>
+</html>
+🔍 Explicación:
+Verificar existencia del producto:
+
+Hacemos una petición GET a la URL http://localhost:3000/products/4 para ver si el producto con id = 4 ya existe en el backend.
+
+Si el producto no existe (404):
+
+Si no se encuentra el producto (lo que devolvería un error 404), entonces creamos el producto con el método POST.
+
+Si el producto existe:
+
+Si el producto sí existe, entonces lo actualizamos con el método PUT.
+
+Respuesta del servidor:
+
+Después de hacer la solicitud (ya sea POST o PUT), procesamos la respuesta con .then(response => response.json()) y mostramos el resultado con un console.log.
+
+Control de errores:
+
+Cualquier error en la comunicación con el servidor o en las peticiones es capturado y mostrado por el bloque .catch(error => console.error("Error en la operación:", error));.
+
+✅ ¿Por qué esto funciona?
+Evita crear el producto si ya existe.
+
+Evita actualizar el producto si no es necesario.
+
+El flujo está controlado y no se produce un bucle infinito porque no hacemos más de una petición innecesaria.
+
